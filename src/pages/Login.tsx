@@ -19,7 +19,7 @@ export default function Login() {
     e.preventDefault()
     setLoading(true)
     try {
-      const res = await axios.post('/api/auth/login', { password })
+      const res = await axios.post('/api/auth/login', { authCode: password })
       if (res.data?.success) {
         setUserLoggedIn(true)
         navigate('/', { replace: true })
