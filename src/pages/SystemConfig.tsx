@@ -35,10 +35,10 @@ export default function SystemConfig() {
   ]
 
   const configTabs: { key: TabKey; label: string; icon: typeof Upload }[] = [
-    { key: 'upload', label: '上传设置', icon: Upload },
-    { key: 'page', label: '页面设置', icon: Layout },
-    { key: 'security', label: '安全设置', icon: Shield },
-    { key: 'others', label: '其他设置', icon: Settings2 },
+    { key: 'upload', label: t('systemConfig.upload'), icon: Upload },
+    { key: 'page', label: t('systemConfig.page'), icon: Layout },
+    { key: 'security', label: t('systemConfig.security'), icon: Shield },
+    { key: 'others', label: t('systemConfig.others'), icon: Settings2 },
   ]
 
   useEffect(() => {
@@ -73,9 +73,9 @@ export default function SystemConfig() {
         case 'others': data = othersConfig; break
       }
       await axios.post(`/api/manage/sysConfig/${activeTab}`, data)
-      toast({ title: '保存成功' })
+      toast({ title: t('systemConfig.saveSuccess') })
     } catch {
-      toast({ title: '保存失败', variant: 'destructive' })
+      toast({ title: t('systemConfig.saveFailed'), variant: 'destructive' })
     } finally {
       setSaving(false)
     }
@@ -269,7 +269,7 @@ export default function SystemConfig() {
             </h2>
             <Button onClick={saveConfig} disabled={saving} className="gap-2">
               <Save className="h-4 w-4" />
-              {saving ? '保存中...' : '保存'}
+              {saving ? t('systemConfig.saving') : t('systemConfig.save')}
             </Button>
           </div>
 

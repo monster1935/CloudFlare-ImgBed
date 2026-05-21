@@ -1,0 +1,2 @@
+import{j as e}from"./index-Hzx8xl8V.js";function t(){return e.jsx("div",{className:"flex min-h-screen items-center justify-center px-4",children:e.jsxs("div",{className:"text-center",children:[e.jsx("h1",{className:"text-2xl font-bold mb-2",children:"Whitelist Required"}),e.jsx("p",{className:"text-muted-foreground",children:"Access is restricted to whitelisted users only."})]})})}export{t as default};
+//# sourceMappingURL=WhiteListOn-DktAlwSS.js.map

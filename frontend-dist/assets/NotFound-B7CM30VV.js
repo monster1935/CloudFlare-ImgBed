@@ -1,2 +1,0 @@
-import{f as s,j as e}from"./index-B6WXTGn_.js";import{B as n}from"./button-yybhkME9.js";function a(){const t=s();return e.jsx("div",{className:"flex min-h-screen items-center justify-center px-4",children:e.jsxs("div",{className:"text-center",children:[e.jsx("h1",{className:"text-6xl font-bold text-muted-foreground mb-4",children:"404"}),e.jsx("p",{className:"text-xl text-muted-foreground mb-8",children:"Page not found"}),e.jsx(n,{onClick:()=>t("/"),children:"Go Home"})]})})}export{a as default};
-//# sourceMappingURL=NotFound-B7CM30VV.js.map

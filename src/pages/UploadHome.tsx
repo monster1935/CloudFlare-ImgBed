@@ -177,7 +177,7 @@ export default function UploadHome() {
         <Logo size="normal" />
         <div className="flex items-center gap-2">
           <Input
-            placeholder="上传目录"
+            placeholder={t('upload.folderPlaceholder')}
             value={uploadFolder}
             onChange={(e) => setUploadFolder(e.target.value)}
             className="w-28 h-8 text-xs"
@@ -211,7 +211,7 @@ export default function UploadHome() {
           <CardContent className="flex flex-col items-center justify-center py-12 md:py-16">
             <Camera className="h-12 w-12 text-primary/60 mb-4" />
             <p className="text-muted-foreground">
-              拖拽 点击 或 Ctrl + V 粘贴上传
+              {t('upload.dragHere')}
             </p>
           </CardContent>
         </Card>

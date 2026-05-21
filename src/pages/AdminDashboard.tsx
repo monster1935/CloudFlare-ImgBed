@@ -109,11 +109,11 @@ export default function AdminDashboard() {
     if (fileNames.length === 0) return
     try {
       await axios.post('/api/manage/batch/delete', { keys: fileNames })
-      toast({ title: `Deleted ${fileNames.length} file(s)` })
+      toast({ title: t('dashboard.deleted', { count: fileNames.length }) })
       setSelectedFiles([])
       fetchFiles()
     } catch {
-      toast({ title: 'Delete failed', variant: 'destructive' })
+      toast({ title: t('dashboard.deleteFailed'), variant: 'destructive' })
     }
   }
 
@@ -174,7 +174,7 @@ export default function AdminDashboard() {
             <div className="relative">
               <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="搜索：#标签 -#排除标签"
+                placeholder={t('dashboard.searchPlaceholder')}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && fetchFiles()}
@@ -223,7 +223,7 @@ export default function AdminDashboard() {
         {selectedFiles.length > 0 && (
           <div className="ml-auto flex items-center gap-1">
             <span className="text-xs text-muted-foreground mr-2">
-              {selectedFiles.length} selected
+              {selectedFiles.length} {t('dashboard.selected')}
             </span>
             <Button variant="ghost" size="icon" className="h-7 w-7" onClick={selectAll}>
               <CheckSquare className="h-3.5 w-3.5" />

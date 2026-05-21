@@ -26,13 +26,28 @@
     "totalImages": "Total Images",
     "storage": "Storage",
     "search": "Search",
+    "searchPlaceholder": "Search: #tag -#exclude",
     "filter": "Filter",
     "sort": "Sort",
     "cardView": "Card View",
     "listView": "List View",
     "logout": "Logout",
     "selected": "selected",
-    "deleteConfirm": "Confirm delete?"
+    "deleteConfirm": "Confirm delete?",
+    "deleted": "Deleted {{count}} file(s)",
+    "deleteFailed": "Delete failed",
+    "files": "files"
+  },
+  "systemConfig": {
+    "title": "System Config",
+    "upload": "Upload Settings",
+    "page": "Page Settings",
+    "security": "Security Settings",
+    "others": "Other Settings",
+    "save": "Save",
+    "saving": "Saving...",
+    "saveSuccess": "Saved successfully",
+    "saveFailed": "Save failed"
   },
   "common": {
     "confirm": "Confirm",
@@ -42,6 +57,8 @@
     "edit": "Edit",
     "search": "Search",
     "loading": "Loading...",
-    "noData": "No data"
+    "noData": "No data",
+    "publicBrowse": "Public Browse",
+    "manage": "Manage"
   }
 }
