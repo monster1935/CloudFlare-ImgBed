@@ -2,7 +2,7 @@ import { useAppStore } from '@/store'
 
 export function Footer() {
   const { userConfig } = useAppStore()
-  const footerLink = (userConfig?.footerLink as string) || 'https://github.com/MarSeventh'
+  const footerLink = (userConfig?.footerLink as string) || 'https://github.com/monster1935/CloudFlare-ImgBed'
   const disableFooter = userConfig?.disableFooter || false
   const year = new Date().getFullYear()
 
@@ -13,7 +13,7 @@ export function Footer() {
       <p>
         © {year}{' '}
         <a href={footerLink} target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">
-          Sanyue ImgHub
+          Yuebin ImgHub
         </a>
       </p>
     </footer>

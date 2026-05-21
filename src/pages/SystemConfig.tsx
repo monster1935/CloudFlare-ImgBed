@@ -1,14 +1,13 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import {
-  Images, Monitor, Globe, Save, Upload, Shield, Layout, Settings2, LogOut, Users, BarChart3, RefreshCw, Wrench, Plus, Trash2, Copy, Key
+  Save, Upload, Shield, Layout, Settings2, LogOut, BarChart3, RefreshCw, Wrench, Plus, Trash2, Copy, Key
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { ToggleDark } from '@/components/ToggleDark'
-import { LanguageSwitcher } from '@/components/LanguageSwitcher'
+import { AdminNav } from '@/components/layout/AdminNav'
 import { useAppStore } from '@/store'
 import { toast } from '@/hooks/useToast'
 import axios from '@/utils/axios'
@@ -27,7 +26,6 @@ interface SystemStatus {
 export default function SystemConfig() {
   const { t } = useTranslation()
   const navigate = useNavigate()
-  const location = useLocation()
   const { setAdminLoggedIn } = useAppStore()
   const [activeTab, setActiveTab] = useState<TabKey>('status')
   const [uploadConfig, setUploadConfig] = useState<Record<string, unknown> | null>(null)
@@ -58,13 +56,6 @@ export default function SystemConfig() {
   const [newTokenExpiryDays, setNewTokenExpiryDays] = useState(30)
   const [newTokenAutoDelete, setNewTokenAutoDelete] = useState(false)
   const [createdTokenValue, setCreatedTokenValue] = useState('')
-
-  const navTabs = [
-    { label: t('dashboard.title') || 'File Manager', icon: Images, path: '/dashboard' },
-    { label: t('customerConfig.title') || 'User Management', icon: Users, path: '/customerConfig' },
-    { label: t('systemConfig.title') || 'System Config', icon: Monitor, path: '/systemConfig' },
-    { label: t('common.publicBrowse') || 'Public Browse', icon: Globe, path: '/browse' },
-  ]
 
   const configTabs: { key: TabKey; label: string; icon: typeof Upload }[] = [
     { key: 'status', label: t('systemConfig.status'), icon: BarChart3 },
@@ -413,32 +404,12 @@ export default function SystemConfig() {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      {/* Top Navigation Bar - same as dashboard */}
-      <header className="sticky top-0 z-50 border-b bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/60">
-        <div className="flex items-center justify-between px-4 h-14">
-          <div className="flex items-center gap-1">
-            {navTabs.map((tab) => (
-              <Button
-                key={tab.path}
-                variant={location.pathname === tab.path ? 'default' : 'ghost'}
-                size="sm"
-                className="gap-2"
-                onClick={() => navigate(tab.path)}
-              >
-                <tab.icon className="h-4 w-4" />
-                <span className="hidden sm:inline">{tab.label}</span>
-              </Button>
-            ))}
-          </div>
-          <div className="flex items-center gap-2">
-            <ToggleDark />
-            <LanguageSwitcher />
-            <Button variant="ghost" size="icon" onClick={handleLogout} title="Logout">
-              <LogOut className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
-      </header>
+      {/* Top Navigation Bar */}
+      <AdminNav>
+        <Button variant="ghost" size="icon" onClick={handleLogout} title="Logout">
+          <LogOut className="h-4 w-4" />
+        </Button>
+      </AdminNav>
 
       <div className="flex flex-1">
         {/* Sidebar tabs */}

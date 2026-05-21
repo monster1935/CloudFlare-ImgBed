@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { FolderOpen, Image, FileText, ArrowLeft, Home } from 'lucide-react'
+import { FolderOpen, Image, FileText, ArrowLeft } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { AdminNav } from '@/components/layout/AdminNav'
 import axios from '@/utils/axios'
 
 interface PublicFile {
@@ -62,12 +63,13 @@ export default function PublicBrowse() {
   }
 
   return (
-    <div className="container mx-auto max-w-6xl py-8 px-4">
-      {/* Header */}
+    <div className="min-h-screen flex flex-col bg-background">
+      {/* Top Navigation Bar */}
+      <AdminNav />
+
+      <div className="container mx-auto max-w-6xl py-8 px-4 flex-1">
+      {/* Directory Header */}
       <div className="flex items-center gap-3 mb-6">
-        <Button variant="ghost" size="sm" onClick={() => navigate('/')}>
-          <Home className="h-4 w-4" />
-        </Button>
         {dir && (
           <Button variant="ghost" size="sm" onClick={goUp}>
             <ArrowLeft className="h-4 w-4 mr-1" />
@@ -148,6 +150,7 @@ export default function PublicBrowse() {
           )}
         </>
       )}
+      </div>
     </div>
   )
 }

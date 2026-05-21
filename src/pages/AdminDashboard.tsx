@@ -1,16 +1,15 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import {
-  Images, Filter, SortDesc, Grid3X3, List, LogOut, Search,
-  Home, Trash2, CheckSquare, Square, Link2, Download, FolderInput,
-  ChevronLeft, ChevronRight, FolderOpen, Monitor, Globe, Users
+  Filter, SortDesc, Grid3X3, List, LogOut, Search,
+  Trash2, CheckSquare, Square, Link2, Download, FolderInput,
+  ChevronLeft, ChevronRight, FolderOpen
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent } from '@/components/ui/card'
-import { ToggleDark } from '@/components/ToggleDark'
-import { LanguageSwitcher } from '@/components/LanguageSwitcher'
+import { AdminNav } from '@/components/layout/AdminNav'
 import { useAppStore } from '@/store'
 import { toast } from '@/hooks/useToast'
 import axios from '@/utils/axios'
@@ -38,7 +37,6 @@ interface DirectoryItem {
 export default function AdminDashboard() {
   const { t } = useTranslation()
   const navigate = useNavigate()
-  const location = useLocation()
   const { setAdminLoggedIn } = useAppStore()
   const [files, setFiles] = useState<FileItem[]>([])
   const [directories, setDirectories] = useState<DirectoryItem[]>([])
@@ -139,75 +137,41 @@ export default function AdminDashboard() {
 
   const pathParts = currentPath.split('/').filter(Boolean)
 
-  // Navigation tabs
-  const navTabs = [
-    { label: t('dashboard.title') || 'File Manager', icon: Images, path: '/dashboard' },
-    { label: t('customerConfig.title') || 'User Management', icon: Users, path: '/customerConfig' },
-    { label: t('systemConfig.title') || 'System Config', icon: Monitor, path: '/systemConfig' },
-    { label: t('common.publicBrowse') || 'Public Browse', icon: Globe, path: '/browse' },
-  ]
-
   return (
     <div className="min-h-screen flex flex-col bg-background">
       {/* Top Navigation Bar */}
-      <header className="sticky top-0 z-50 border-b bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/60">
-        <div className="flex items-center justify-between px-4 h-14">
-          {/* Left: Nav Tabs */}
-          <div className="flex items-center gap-1">
-            {navTabs.map((tab) => (
-              <Button
-                key={tab.path}
-                variant={location.pathname === tab.path ? 'default' : 'ghost'}
-                size="sm"
-                className="gap-2"
-                onClick={() => navigate(tab.path)}
-              >
-                <tab.icon className="h-4 w-4" />
-                <span className="hidden sm:inline">{tab.label}</span>
-              </Button>
-            ))}
-          </div>
-
-          {/* Right: Search & Actions */}
-          <div className="flex items-center gap-2">
-            <ToggleDark />
-            <LanguageSwitcher />
-            <div className="relative">
-              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder={t('dashboard.searchPlaceholder')}
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && fetchFiles()}
-                className="pl-9 w-48 md:w-64 h-9"
-              />
-            </div>
-            <Button variant="ghost" size="icon" title="Filter">
-              <Filter className="h-4 w-4" />
-            </Button>
-            <Button variant="ghost" size="icon" title="Sort">
-              <SortDesc className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setViewMode(viewMode === 'card' ? 'list' : 'card')}
-              title={viewMode === 'card' ? 'List view' : 'Card view'}
-            >
-              {viewMode === 'card' ? <List className="h-4 w-4" /> : <Grid3X3 className="h-4 w-4" />}
-            </Button>
-            <Button variant="ghost" size="icon" onClick={handleLogout} title="Logout">
-              <LogOut className="h-4 w-4" />
-            </Button>
-          </div>
+      <AdminNav>
+        <div className="relative">
+          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder={t('dashboard.searchPlaceholder')}
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && fetchFiles()}
+            className="pl-9 w-48 md:w-64 h-9"
+          />
         </div>
-      </header>
+        <Button variant="ghost" size="icon" title="Filter">
+          <Filter className="h-4 w-4" />
+        </Button>
+        <Button variant="ghost" size="icon" title="Sort">
+          <SortDesc className="h-4 w-4" />
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => setViewMode(viewMode === 'card' ? 'list' : 'card')}
+          title={viewMode === 'card' ? 'List view' : 'Card view'}
+        >
+          {viewMode === 'card' ? <List className="h-4 w-4" /> : <Grid3X3 className="h-4 w-4" />}
+        </Button>
+        <Button variant="ghost" size="icon" onClick={handleLogout} title="Logout">
+          <LogOut className="h-4 w-4" />
+        </Button>
+      </AdminNav>
 
       {/* Breadcrumb */}
       <div className="px-4 py-2 flex items-center gap-1 text-sm border-b">
-        <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => navigateToFolder('')}>
-          <Home className="h-4 w-4" />
-        </Button>
         {pathParts.map((part, i) => (
           <span key={i} className="flex items-center gap-1">
             <span className="text-muted-foreground">/</span>

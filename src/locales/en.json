@@ -107,7 +107,9 @@
     "prev": "Previous",
     "next": "Next",
     "error": "Operation failed",
-    "copied": "Copied"
+    "copied": "Copied",
+    "home": "Home",
+    "back": "Back"
   },
   "customerConfig": {
     "title": "User Management",
