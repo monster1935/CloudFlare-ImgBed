@@ -1,2 +1,0 @@
-import{j as e}from"./index-CShv1bNw.js";function s(){return e.jsx("div",{className:"flex min-h-screen items-center justify-center px-4",children:e.jsxs("div",{className:"text-center",children:[e.jsx("h1",{className:"text-2xl font-bold text-destructive mb-2",children:"Image Blocked"}),e.jsx("p",{className:"text-muted-foreground",children:"This image has been blocked by the administrator."})]})})}export{s as default};
-//# sourceMappingURL=BlockImage-CnlvgW76.js.map
