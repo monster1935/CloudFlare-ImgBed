@@ -2,8 +2,6 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAppStore } from '@/store'
 import axios from '@/utils/axios'
-import { toast } from '@/hooks/useToast'
-import { useTranslation } from 'react-i18next'
 
 interface AuthGuardProps {
   children: React.ReactNode
@@ -13,17 +11,22 @@ interface AuthGuardProps {
 export function AuthGuard({ children, type }: AuthGuardProps) {
   const [authorized, setAuthorized] = useState<boolean | null>(null)
   const navigate = useNavigate()
-  const { t } = useTranslation()
-  const { adminLoggedIn, userLoggedIn, setAdminLoggedIn, setUserLoggedIn } = useAppStore()
+  const { setAdminLoggedIn, setUserLoggedIn } = useAppStore()
 
   useEffect(() => {
     const checkAuth = async () => {
       try {
         const res = await axios.get('/api/auth/sessionCheck')
-        const data = res.data || {}
+        const data = res.data
+
+        // Validate response shape - if not a proper JSON object, treat as unauthorized
+        if (!data || typeof data !== 'object' || !('adminRequired' in data || 'userRequired' in data)) {
+          throw new Error('Invalid session check response')
+        }
 
         if (type === 'admin') {
-          if (!data.adminRequired) {
+          if (data.adminRequired === false) {
+            // No admin credentials configured - allow access
             setAdminLoggedIn(true)
             setAuthorized(true)
             return
@@ -33,13 +36,11 @@ export function AuthGuard({ children, type }: AuthGuardProps) {
             setAuthorized(true)
             return
           }
-          if (adminLoggedIn) {
-            toast({ title: t('login.authRequired'), variant: 'destructive' })
-          }
           setAdminLoggedIn(false)
+          setAuthorized(false)
           navigate('/adminLogin', { replace: true })
         } else {
-          if (!data.userRequired) {
+          if (data.userRequired === false) {
             setUserLoggedIn(true)
             setAuthorized(true)
             return
@@ -49,23 +50,16 @@ export function AuthGuard({ children, type }: AuthGuardProps) {
             setAuthorized(true)
             return
           }
-          if (userLoggedIn) {
-            toast({ title: t('login.authRequired'), variant: 'destructive' })
-          }
           setUserLoggedIn(false)
+          setAuthorized(false)
           navigate('/login', { replace: true })
         }
       } catch {
+        setAuthorized(false)
         if (type === 'admin') {
-          if (adminLoggedIn) {
-            toast({ title: t('login.authRequired'), variant: 'destructive' })
-          }
           setAdminLoggedIn(false)
           navigate('/adminLogin', { replace: true })
         } else {
-          if (userLoggedIn) {
-            toast({ title: t('login.authRequired'), variant: 'destructive' })
-          }
           setUserLoggedIn(false)
           navigate('/login', { replace: true })
         }
@@ -75,7 +69,7 @@ export function AuthGuard({ children, type }: AuthGuardProps) {
     checkAuth()
   }, [])
 
-  if (authorized === null) {
+  if (authorized !== true) {
     return (
       <div className="flex h-screen items-center justify-center">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
