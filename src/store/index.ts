@@ -10,6 +10,13 @@ interface CompressConfig {
   convertToWebp?: boolean
 }
 
+interface UploadHistoryItem {
+  name: string
+  src: string
+  type: string
+  timestamp: number
+}
+
 interface UrlSettings {
   useCustomUrl: string
   customUrlPrefix: string
@@ -39,6 +46,7 @@ interface AppState {
   autoReUpload: boolean
   useDarkMode: boolean | null
   cusDarkMode: boolean
+  uploadHistory: UploadHistoryItem[]
 
   // Actions
   setUserConfig: (config: UserConfig | null) => void
@@ -58,6 +66,8 @@ interface AppState {
   setAutoReUpload: (auto: boolean) => void
   setUseDarkMode: (mode: boolean | null) => void
   setCusDarkMode: (cus: boolean) => void
+  addUploadHistory: (item: Omit<UploadHistoryItem, 'timestamp'>) => void
+  clearUploadHistory: () => void
   fetchUserConfig: () => Promise<void>
   fetchBingWallPapers: () => Promise<void>
 }
@@ -82,6 +92,7 @@ export const useAppStore = create<AppState>()(
       autoReUpload: true,
       useDarkMode: null,
       cusDarkMode: false,
+      uploadHistory: [],
 
       setUserConfig: (config) => set({ userConfig: config }),
       setBingWallPapers: (papers) => set({ bingWallPapers: papers }),
@@ -109,6 +120,14 @@ export const useAppStore = create<AppState>()(
       setAutoReUpload: (auto) => set({ autoReUpload: auto }),
       setUseDarkMode: (mode) => set({ useDarkMode: mode }),
       setCusDarkMode: (cus) => set({ cusDarkMode: cus }),
+      addUploadHistory: (item) =>
+        set((state) => ({
+          uploadHistory: [
+            { ...item, timestamp: Date.now() },
+            ...state.uploadHistory,
+          ].slice(0, 100), // Keep last 100
+        })),
+      clearUploadHistory: () => set({ uploadHistory: [] }),
 
       fetchUserConfig: async () => {
         try {
@@ -149,6 +168,7 @@ export const useAppStore = create<AppState>()(
         autoReUpload: state.autoReUpload,
         useDarkMode: state.useDarkMode,
         cusDarkMode: state.cusDarkMode,
+        uploadHistory: state.uploadHistory,
       }),
     }
   )

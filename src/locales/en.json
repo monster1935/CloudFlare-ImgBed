@@ -19,7 +19,9 @@
     "folderPlaceholder": "Upload folder",
     "copyAll": "Copy all",
     "clearAll": "Clear all",
-    "reUpload": "Re-upload failed"
+    "reUpload": "Re-upload failed",
+    "history": "Upload History",
+    "clearHistory": "Clear History"
   },
   "dashboard": {
     "title": "File Manager",
@@ -36,10 +38,15 @@
     "deleteConfirm": "Confirm delete?",
     "deleted": "Deleted {{count}} file(s)",
     "deleteFailed": "Delete failed",
-    "files": "files"
+    "files": "files",
+    "selectAll": "Select all",
+    "copyLink": "Copy link",
+    "download": "Download",
+    "move": "Move"
   },
   "systemConfig": {
     "title": "System Config",
+    "status": "System Status",
     "upload": "Upload Settings",
     "page": "Page Settings",
     "security": "Security Settings",
@@ -47,7 +54,21 @@
     "save": "Save",
     "saving": "Saving...",
     "saveSuccess": "Saved successfully",
-    "saveFailed": "Save failed"
+    "saveFailed": "Save failed",
+    "totalFiles": "Total Files",
+    "indexUpdated": "Index Updated",
+    "version": "Version",
+    "channelDist": "Channel Distribution",
+    "fileStatus": "File Status",
+    "normal": "Normal",
+    "blocked": "Blocked",
+    "maintenance": "System Maintenance",
+    "rebuildIndex": "Rebuild Index",
+    "rebuildStarted": "Index rebuild started",
+    "rebuildFailed": "Index rebuild failed",
+    "mergeOps": "Merge Operations",
+    "mergeStarted": "Merge started",
+    "refresh": "Refresh"
   },
   "common": {
     "confirm": "Confirm",
@@ -59,6 +80,24 @@
     "loading": "Loading...",
     "noData": "No data",
     "publicBrowse": "Public Browse",
-    "manage": "Manage"
+    "manage": "Manage",
+    "prev": "Previous",
+    "next": "Next",
+    "error": "Operation failed"
+  },
+  "customerConfig": {
+    "title": "User Management",
+    "ip": "IP Address",
+    "address": "Location",
+    "uploadCount": "Uploads",
+    "allowUpload": "Allow Upload",
+    "blocked": "Blocked",
+    "allowed": "Allowed",
+    "unblocked": "Unblocked",
+    "fileList": "Uploaded Files",
+    "fileName": "File Name",
+    "preview": "Preview",
+    "uploadTime": "Upload Time",
+    "showingOf": "Showing {{shown}} of {{total}}"
   }
 }

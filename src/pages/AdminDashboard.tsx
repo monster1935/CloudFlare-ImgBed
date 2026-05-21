@@ -3,8 +3,8 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate, useLocation } from 'react-router-dom'
 import {
   Images, Filter, SortDesc, Grid3X3, List, LogOut, Search,
-  Home, Trash2, CheckSquare, Square,
-  ChevronLeft, ChevronRight, FolderOpen, Monitor, Globe
+  Home, Trash2, CheckSquare, Square, Link2, Download, FolderInput,
+  ChevronLeft, ChevronRight, FolderOpen, Monitor, Globe, Users
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -142,6 +142,7 @@ export default function AdminDashboard() {
   // Navigation tabs
   const navTabs = [
     { label: t('dashboard.title') || 'File Manager', icon: Images, path: '/dashboard' },
+    { label: t('customerConfig.title') || 'User Management', icon: Users, path: '/customerConfig' },
     { label: t('systemConfig.title') || 'System Config', icon: Monitor, path: '/systemConfig' },
     { label: t('common.publicBrowse') || 'Public Browse', icon: Globe, path: '/browse' },
   ]
@@ -225,10 +226,38 @@ export default function AdminDashboard() {
             <span className="text-xs text-muted-foreground mr-2">
               {selectedFiles.length} {t('dashboard.selected')}
             </span>
-            <Button variant="ghost" size="icon" className="h-7 w-7" onClick={selectAll}>
+            <Button variant="ghost" size="icon" className="h-7 w-7" onClick={selectAll} title={t('dashboard.selectAll')}>
               <CheckSquare className="h-3.5 w-3.5" />
             </Button>
-            <Button variant="ghost" size="icon" className="h-7 w-7 text-red-500" onClick={() => handleDelete(selectedFiles)}>
+            <Button
+              variant="ghost" size="icon" className="h-7 w-7"
+              onClick={() => {
+                const urls = selectedFiles.map(name => `${window.location.origin}/file/${name}`).join('\n')
+                navigator.clipboard.writeText(urls)
+                toast({ title: t('upload.copied') })
+              }}
+              title={t('dashboard.copyLink')}
+            >
+              <Link2 className="h-3.5 w-3.5" />
+            </Button>
+            <Button
+              variant="ghost" size="icon" className="h-7 w-7"
+              onClick={() => {
+                selectedFiles.forEach(name => {
+                  const a = document.createElement('a')
+                  a.href = `/file/${name}`
+                  a.download = name
+                  a.click()
+                })
+              }}
+              title={t('dashboard.download')}
+            >
+              <Download className="h-3.5 w-3.5" />
+            </Button>
+            <Button variant="ghost" size="icon" className="h-7 w-7" title={t('dashboard.move')}>
+              <FolderInput className="h-3.5 w-3.5" />
+            </Button>
+            <Button variant="ghost" size="icon" className="h-7 w-7 text-red-500" onClick={() => handleDelete(selectedFiles)} title={t('common.delete')}>
               <Trash2 className="h-3.5 w-3.5" />
             </Button>
           </div>

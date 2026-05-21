@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Copy, Check, Trash2, RefreshCw, Camera, Settings, Link2, Upload } from 'lucide-react'
+import { Copy, Check, Trash2, RefreshCw, Camera, Settings, Link2, Upload, History, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -42,11 +42,12 @@ type UrlFormat = 'url' | 'markdown' | 'html' | 'bbcode'
 
 export default function UploadHome() {
   const { t } = useTranslation()
-  const { uploadFolder, setUploadFolder, userConfig } = useAppStore()
+  const { uploadFolder, setUploadFolder, userConfig, uploadHistory, addUploadHistory, clearUploadHistory } = useAppStore()
   const [isDragging, setIsDragging] = useState(false)
   const [fileList, setFileList] = useState<UploadedFile[]>([])
   const [selectedUrlForm, setSelectedUrlForm] = useState<UrlFormat>('url')
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null)
+  const [showHistory, setShowHistory] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const ownerName = (userConfig?.ownerName as string) || 'Sanyue'
@@ -91,6 +92,8 @@ export default function UploadHome() {
                 : f
             )
           )
+          // Save to upload history
+          addUploadHistory({ name: file.name, src: fullUrl, type: fileType })
         } else {
           setFileList((prev) =>
             prev.map((f) =>
@@ -185,6 +188,15 @@ export default function UploadHome() {
           <LanguageSwitcher />
           <Button variant="ghost" size="icon" onClick={() => window.open('/dashboard', '_self')}>
             <Settings className="h-5 w-5" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setShowHistory(!showHistory)}
+            title={t('upload.history')}
+            className={showHistory ? 'text-primary' : ''}
+          >
+            <History className="h-5 w-5" />
           </Button>
           <ToggleDark />
         </div>
@@ -334,6 +346,70 @@ export default function UploadHome() {
           </Card>
         )}
       </main>
+
+      {/* Upload History Panel */}
+      {showHistory && (
+        <div className="fixed inset-0 z-50 bg-black/50" onClick={() => setShowHistory(false)}>
+          <div
+            className="absolute right-0 top-0 bottom-0 w-full max-w-md bg-background shadow-xl overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="sticky top-0 bg-background border-b px-4 py-3 flex items-center justify-between">
+              <h3 className="font-semibold">{t('upload.history')}</h3>
+              <div className="flex items-center gap-2">
+                {uploadHistory.length > 0 && (
+                  <Button variant="ghost" size="sm" className="text-red-500 text-xs" onClick={clearUploadHistory}>
+                    {t('upload.clearHistory')}
+                  </Button>
+                )}
+                <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setShowHistory(false)}>
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+
+            {uploadHistory.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-20 text-muted-foreground">
+                <History className="h-12 w-12 mb-3 opacity-50" />
+                <p className="text-sm">{t('common.noData')}</p>
+              </div>
+            ) : (
+              <div className="p-3 space-y-2">
+                {uploadHistory.map((item, idx) => (
+                  <div key={idx} className="flex items-center gap-3 p-2 rounded-lg border bg-card">
+                    <div className="w-12 h-12 rounded overflow-hidden bg-muted flex-shrink-0">
+                      {item.type === 'image' ? (
+                        <img src={item.src} alt={item.name} className="w-full h-full object-cover" loading="lazy" />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-muted-foreground">
+                          <Upload className="h-4 w-4" />
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-medium truncate">{item.name}</p>
+                      <p className="text-[10px] text-muted-foreground">
+                        {new Date(item.timestamp).toLocaleString()}
+                      </p>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-7 w-7 flex-shrink-0"
+                      onClick={() => {
+                        navigator.clipboard.writeText(item.src)
+                        toast({ title: t('upload.copied') })
+                      }}
+                    >
+                      <Copy className="h-3.5 w-3.5" />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       <Footer />
     </div>

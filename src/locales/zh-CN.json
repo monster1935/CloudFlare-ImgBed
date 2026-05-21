@@ -19,7 +19,9 @@
     "folderPlaceholder": "上传目录",
     "copyAll": "复制全部",
     "clearAll": "清空",
-    "reUpload": "重新上传失败项"
+    "reUpload": "重新上传失败项",
+    "history": "上传历史",
+    "clearHistory": "清空历史"
   },
   "dashboard": {
     "title": "文件管理",
@@ -36,18 +38,37 @@
     "deleteConfirm": "确认删除？",
     "deleted": "已删除 {{count}} 个文件",
     "deleteFailed": "删除失败",
-    "files": "文件"
+    "files": "文件",
+    "selectAll": "全选",
+    "copyLink": "复制链接",
+    "download": "下载",
+    "move": "移动"
   },
   "systemConfig": {
     "title": "系统设置",
+    "status": "系统状态",
     "upload": "上传设置",
-    "page": "页面设置",
+    "page": "网页设置",
     "security": "安全设置",
     "others": "其他设置",
     "save": "保存",
     "saving": "保存中...",
     "saveSuccess": "保存成功",
-    "saveFailed": "保存失败"
+    "saveFailed": "保存失败",
+    "totalFiles": "文件总数",
+    "indexUpdated": "索引更新时间",
+    "version": "系统版本",
+    "channelDist": "上传渠道分布",
+    "fileStatus": "文件状态分布",
+    "normal": "正常",
+    "blocked": "已屏蔽",
+    "maintenance": "系统维护",
+    "rebuildIndex": "重建索引",
+    "rebuildStarted": "索引重建已开始",
+    "rebuildFailed": "索引重建失败",
+    "mergeOps": "合并操作",
+    "mergeStarted": "合并已开始",
+    "refresh": "刷新"
   },
   "common": {
     "confirm": "确认",
@@ -59,6 +80,24 @@
     "loading": "加载中...",
     "noData": "暂无数据",
     "publicBrowse": "公开浏览",
-    "manage": "管理"
+    "manage": "管理",
+    "prev": "上一页",
+    "next": "下一页",
+    "error": "操作失败"
+  },
+  "customerConfig": {
+    "title": "用户管理",
+    "ip": "IP地址",
+    "address": "地址",
+    "uploadCount": "上传次数",
+    "allowUpload": "允许上传",
+    "blocked": "禁止",
+    "allowed": "允许",
+    "unblocked": "已解除封禁",
+    "fileList": "上传文件列表",
+    "fileName": "文件名",
+    "preview": "文件预览",
+    "uploadTime": "上传时间",
+    "showingOf": "显示 {{shown}} / 共 {{total}} 条"
   }
 }
