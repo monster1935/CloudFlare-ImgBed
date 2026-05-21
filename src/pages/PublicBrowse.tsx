@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import axios from '@/utils/axios'
 
 interface PublicFile {
-  id: string
+  name: string
   metadata?: {
     FileType?: string
     TimeStamp?: string
@@ -58,7 +58,7 @@ export default function PublicBrowse() {
 
   const isImage = (file: PublicFile) => {
     const type = file.metadata?.FileType || ''
-    return type.startsWith('image/') || /\.(jpg|jpeg|png|gif|webp|svg|bmp|ico)$/i.test(file.id)
+    return type.startsWith('image/') || /\.(jpg|jpeg|png|gif|webp|svg|bmp|ico)$/i.test(file.name)
   }
 
   return (
@@ -114,8 +114,8 @@ export default function PublicBrowse() {
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
               {files.map(file => (
                 <a
-                  key={file.id}
-                  href={`/file/${file.id}`}
+                  key={file.name}
+                  href={`/file/${file.name}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="group"
@@ -124,8 +124,8 @@ export default function PublicBrowse() {
                     <div className="aspect-square bg-muted flex items-center justify-center overflow-hidden">
                       {isImage(file) ? (
                         <img
-                          src={`/file/${file.id}`}
-                          alt={file.id}
+                          src={`/file/${file.name}`}
+                          alt={file.name}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                           loading="lazy"
                         />
@@ -134,7 +134,7 @@ export default function PublicBrowse() {
                       )}
                     </div>
                     <CardContent className="p-2">
-                      <p className="text-xs truncate text-muted-foreground">{file.id.split('/').pop()}</p>
+                      <p className="text-xs truncate text-muted-foreground">{file.name.split('/').pop()}</p>
                     </CardContent>
                   </Card>
                 </a>
