@@ -7,8 +7,8 @@ interface LogoProps {
 export function Logo({ size = 'normal' }: LogoProps) {
   const { userConfig, useDarkMode } = useAppStore()
 
-  const logoUrl = userConfig?.logoUrl || (useDarkMode ? '/static/media/logo-dark.png' : '/static/media/logo.png')
-  const href = userConfig?.logoLink || 'https://github.com/MarSeventh/CloudFlare-ImgBed'
+  const logoUrl: string = (userConfig?.logoUrl as string) || (useDarkMode ? '/static/media/logo-dark.png' : '/static/media/logo.png')
+  const href: string = (userConfig?.logoLink as string) || 'https://github.com/MarSeventh/CloudFlare-ImgBed'
 
   const sizeClasses = {
     small: 'w-8 h-8',

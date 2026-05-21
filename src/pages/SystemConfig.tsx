@@ -161,6 +161,7 @@ export default function SystemConfig() {
       case 'page': return pageConfig
       case 'security': return securityConfig
       case 'others': return othersConfig
+      default: return null
     }
   })()
 
