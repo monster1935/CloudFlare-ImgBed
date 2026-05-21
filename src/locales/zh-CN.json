@@ -1,0 +1,47 @@
+{
+  "login": {
+    "title": "登录",
+    "username": "用户名",
+    "password": "密码",
+    "submit": "登录",
+    "authRequired": "请先登录",
+    "adminTitle": "管理员登录",
+    "userTitle": "用户登录"
+  },
+  "upload": {
+    "title": "上传文件",
+    "dragHere": "拖拽 点击 或 Ctrl + V 粘贴上传",
+    "uploading": "上传中...",
+    "success": "上传成功",
+    "failed": "上传失败",
+    "copyLink": "复制链接",
+    "copied": "已复制到剪贴板",
+    "folderPlaceholder": "上传目录",
+    "copyAll": "复制全部",
+    "clearAll": "清空",
+    "reUpload": "重新上传失败项"
+  },
+  "dashboard": {
+    "title": "文件管理",
+    "totalImages": "总图片数",
+    "storage": "存储空间",
+    "search": "搜索",
+    "filter": "筛选",
+    "sort": "排序",
+    "cardView": "卡片视图",
+    "listView": "列表视图",
+    "logout": "退出登录",
+    "selected": "已选择",
+    "deleteConfirm": "确认删除？"
+  },
+  "common": {
+    "confirm": "确认",
+    "cancel": "取消",
+    "save": "保存",
+    "delete": "删除",
+    "edit": "编辑",
+    "search": "搜索",
+    "loading": "加载中...",
+    "noData": "暂无数据"
+  }
+}
