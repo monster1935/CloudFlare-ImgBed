@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useLocation } from 'react-router-dom'
 import {
-  Images, Monitor, Globe, Save, Upload, Shield, Layout, Settings2, LogOut, Users, BarChart3, RefreshCw, Wrench
+  Images, Monitor, Globe, Save, Upload, Shield, Layout, Settings2, LogOut, Users, BarChart3, RefreshCw, Wrench, Plus, Trash2, Copy, Key
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -39,6 +39,26 @@ export default function SystemConfig() {
   const [saving, setSaving] = useState(false)
   const [rebuilding, setRebuilding] = useState(false)
 
+  // API Token management
+  interface ApiToken {
+    id: string
+    name: string
+    owner: string
+    permissions: string[]
+    createdAt: string
+    token: string
+    expiresAt: string | null
+    autoDelete: boolean
+  }
+  const [apiTokens, setApiTokens] = useState<ApiToken[]>([])
+  const [showCreateToken, setShowCreateToken] = useState(false)
+  const [newTokenName, setNewTokenName] = useState('')
+  const [newTokenPerms, setNewTokenPerms] = useState<string[]>(['upload'])
+  const [newTokenExpiry, setNewTokenExpiry] = useState<'never' | 'custom'>('never')
+  const [newTokenExpiryDays, setNewTokenExpiryDays] = useState(30)
+  const [newTokenAutoDelete, setNewTokenAutoDelete] = useState(false)
+  const [createdTokenValue, setCreatedTokenValue] = useState('')
+
   const navTabs = [
     { label: t('dashboard.title') || 'File Manager', icon: Images, path: '/dashboard' },
     { label: t('customerConfig.title') || 'User Management', icon: Users, path: '/customerConfig' },
@@ -59,6 +79,9 @@ export default function SystemConfig() {
       loadSystemStatus()
     } else {
       loadConfig(activeTab)
+      if (activeTab === 'security') {
+        loadApiTokens()
+      }
     }
   }, [activeTab])
 
@@ -109,6 +132,53 @@ export default function SystemConfig() {
       setTimeout(loadSystemStatus, 2000)
     } catch {
       toast({ title: t('common.error'), variant: 'destructive' })
+    }
+  }
+
+  // API Token functions
+  const loadApiTokens = async () => {
+    try {
+      const res = await axios.get('/api/manage/apiTokens')
+      setApiTokens(res.data?.tokens || [])
+    } catch {
+      console.error('Failed to load API tokens')
+    }
+  }
+
+  const createToken = async () => {
+    if (!newTokenName.trim()) {
+      toast({ title: t('systemConfig.tokenNameRequired'), variant: 'destructive' })
+      return
+    }
+    try {
+      const expiresAt = newTokenExpiry === 'never' ? null
+        : new Date(Date.now() + newTokenExpiryDays * 86400000).toISOString()
+      const res = await axios.post('/api/manage/apiTokens', {
+        name: newTokenName,
+        permissions: newTokenPerms,
+        owner: 'admin',
+        expiresAt,
+        autoDelete: newTokenAutoDelete,
+      })
+      setCreatedTokenValue(res.data?.token || '')
+      setNewTokenName('')
+      setNewTokenPerms(['upload'])
+      setNewTokenExpiry('never')
+      setNewTokenAutoDelete(false)
+      toast({ title: t('systemConfig.tokenCreated') })
+      loadApiTokens()
+    } catch {
+      toast({ title: t('systemConfig.tokenCreateFailed'), variant: 'destructive' })
+    }
+  }
+
+  const deleteToken = async (id: string) => {
+    try {
+      await axios.delete(`/api/manage/apiTokens?id=${id}`)
+      toast({ title: t('systemConfig.tokenDeleted') })
+      loadApiTokens()
+    } catch {
+      toast({ title: t('systemConfig.tokenDeleteFailed'), variant: 'destructive' })
     }
   }
 
@@ -438,9 +508,12 @@ export default function SystemConfig() {
                         <p className="text-sm text-muted-foreground">{t('common.noData')}</p>
                       ) : (
                         <div className="space-y-2">
-                          {Object.entries(systemStatus.quotaStats).map(([channel, count]) => {
+                          {Object.entries(systemStatus.quotaStats).map(([channel, rawCount]) => {
+                            const fileCount = typeof rawCount === 'object' && rawCount !== null
+                              ? (rawCount as { fileCount?: number }).fileCount || 0
+                              : (rawCount as number) || 0
                             const percentage = systemStatus.totalCount > 0
-                              ? Math.round(((count as number) / systemStatus.totalCount) * 100)
+                              ? Math.round((fileCount / systemStatus.totalCount) * 100)
                               : 0
                             return (
                               <div key={channel} className="flex items-center gap-3">
@@ -452,7 +525,7 @@ export default function SystemConfig() {
                                     channel.includes('S3') ? '#8b5cf6' : '#6b7280'
                                 }} />
                                 <span className="text-sm flex-1">{channel}</span>
-                                <span className="text-sm font-medium">{count as number}</span>
+                                <span className="text-sm font-medium">{fileCount}</span>
                                 <span className="text-xs text-muted-foreground w-10 text-right">{percentage}%</span>
                               </div>
                             )
@@ -535,7 +608,137 @@ export default function SystemConfig() {
                   ))}
                 </div>
               ) : (
-                renderConfigFields(currentConfig)
+                <>
+                  {renderConfigFields(currentConfig)}
+
+                  {/* API Token Management - only in security tab */}
+                  {activeTab === 'security' && (
+                    <Card className="mt-6">
+                      <CardHeader>
+                        <CardTitle className="text-base flex items-center justify-between">
+                          <span className="flex items-center gap-2">
+                            <Key className="h-4 w-4" />
+                            {t('systemConfig.apiTokenManagement')}
+                          </span>
+                          <Button size="sm" variant="outline" onClick={() => { setShowCreateToken(!showCreateToken); setCreatedTokenValue('') }} className="gap-1">
+                            <Plus className="h-3 w-3" />
+                            {t('systemConfig.createToken')}
+                          </Button>
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        {/* Create Token Form */}
+                        {showCreateToken && (
+                          <div className="border rounded-lg p-4 space-y-3 bg-muted/30">
+                            <div className="space-y-1">
+                              <label className="text-sm font-medium">{t('systemConfig.tokenName')}</label>
+                              <Input
+                                value={newTokenName}
+                                onChange={(e) => setNewTokenName(e.target.value)}
+                                placeholder={t('systemConfig.tokenNamePlaceholder')}
+                              />
+                            </div>
+                            <div className="space-y-1">
+                              <label className="text-sm font-medium">{t('systemConfig.permissions')}</label>
+                              <div className="flex flex-wrap gap-2">
+                                {['upload', 'delete', 'list', 'manage'].map(perm => (
+                                  <button
+                                    key={perm}
+                                    className={`px-3 py-1 text-xs rounded-full border transition-colors ${
+                                      newTokenPerms.includes(perm) ? 'bg-primary text-primary-foreground border-primary' : 'bg-background border-border'
+                                    }`}
+                                    onClick={() => setNewTokenPerms(prev =>
+                                      prev.includes(perm) ? prev.filter(p => p !== perm) : [...prev, perm]
+                                    )}
+                                  >
+                                    {t(`systemConfig.perm${perm.charAt(0).toUpperCase() + perm.slice(1)}`)}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                            <div className="space-y-1">
+                              <label className="text-sm font-medium">{t('systemConfig.expiry')}</label>
+                              <div className="flex items-center gap-3">
+                                <button
+                                  className={`px-3 py-1 text-xs rounded-full border ${newTokenExpiry === 'never' ? 'bg-primary text-primary-foreground' : ''}`}
+                                  onClick={() => setNewTokenExpiry('never')}
+                                >{t('systemConfig.neverExpire')}</button>
+                                <button
+                                  className={`px-3 py-1 text-xs rounded-full border ${newTokenExpiry === 'custom' ? 'bg-primary text-primary-foreground' : ''}`}
+                                  onClick={() => setNewTokenExpiry('custom')}
+                                >{t('systemConfig.validPeriod')}</button>
+                                {newTokenExpiry === 'custom' && (
+                                  <div className="flex items-center gap-1">
+                                    <Input
+                                      type="number"
+                                      className="w-20 h-7 text-xs"
+                                      value={newTokenExpiryDays}
+                                      onChange={(e) => setNewTokenExpiryDays(Number(e.target.value))}
+                                    />
+                                    <span className="text-xs text-muted-foreground">{t('systemConfig.days')}</span>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                            {newTokenExpiry === 'custom' && (
+                              <div className="flex items-center gap-2">
+                                <input
+                                  type="checkbox"
+                                  checked={newTokenAutoDelete}
+                                  onChange={(e) => setNewTokenAutoDelete(e.target.checked)}
+                                  className="rounded"
+                                />
+                                <span className="text-xs">{t('systemConfig.autoDeleteOnExpire')}</span>
+                              </div>
+                            )}
+                            <Button size="sm" onClick={createToken}>{t('systemConfig.createBtn')}</Button>
+
+                            {createdTokenValue && (
+                              <div className="mt-2 p-3 bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 rounded-md">
+                                <p className="text-xs text-green-700 dark:text-green-300 mb-1">{t('systemConfig.tokenCreatedCopy')}</p>
+                                <div className="flex items-center gap-2">
+                                  <code className="text-xs flex-1 break-all">{createdTokenValue}</code>
+                                  <Button size="sm" variant="ghost" onClick={() => { navigator.clipboard.writeText(createdTokenValue); toast({ title: t('common.copied') }) }}>
+                                    <Copy className="h-3 w-3" />
+                                  </Button>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        )}
+
+                        {/* Token List */}
+                        {apiTokens.length === 0 ? (
+                          <p className="text-sm text-muted-foreground">{t('systemConfig.noTokens')}</p>
+                        ) : (
+                          <div className="space-y-2">
+                            {apiTokens.map(token => (
+                              <div key={token.id} className="flex items-center gap-3 p-3 border rounded-lg">
+                                <div className="flex-1 min-w-0">
+                                  <div className="flex items-center gap-2">
+                                    <span className="text-sm font-medium">{token.name}</span>
+                                    <span className="text-xs text-muted-foreground">{token.token}</span>
+                                  </div>
+                                  <div className="flex items-center gap-2 mt-1">
+                                    {token.permissions.map(p => (
+                                      <span key={p} className="px-1.5 py-0.5 text-[10px] rounded bg-muted">{p}</span>
+                                    ))}
+                                    <span className="text-[10px] text-muted-foreground">
+                                      {token.expiresAt ? `${t('systemConfig.expiresAt')}: ${new Date(token.expiresAt).toLocaleDateString()}` : t('systemConfig.neverExpire')}
+                                    </span>
+                                  </div>
+                                </div>
+                                <Button size="sm" variant="ghost" className="text-destructive" onClick={() => deleteToken(token.id)}>
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
+                  )}
+                </>
               )}
             </>
           )}

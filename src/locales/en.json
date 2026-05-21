@@ -68,7 +68,30 @@
     "rebuildFailed": "Index rebuild failed",
     "mergeOps": "Merge Operations",
     "mergeStarted": "Merge started",
-    "refresh": "Refresh"
+    "refresh": "Refresh",
+    "apiTokenManagement": "API Token Management",
+    "createToken": "Create Token",
+    "tokenName": "Name",
+    "tokenNamePlaceholder": "Enter token name",
+    "tokenNameRequired": "Please enter token name",
+    "permissions": "Permissions",
+    "permUpload": "Upload",
+    "permDelete": "Delete",
+    "permList": "List",
+    "permManage": "Manage",
+    "expiry": "Expiry",
+    "neverExpire": "Never Expire",
+    "validPeriod": "Custom",
+    "days": "days",
+    "autoDeleteOnExpire": "Auto-delete on expiry",
+    "createBtn": "Create",
+    "tokenCreated": "Token created",
+    "tokenCreatedCopy": "Copy this token now. It won't be shown again:",
+    "tokenCreateFailed": "Failed to create token",
+    "tokenDeleted": "Token deleted",
+    "tokenDeleteFailed": "Failed to delete token",
+    "noTokens": "No API Tokens",
+    "expiresAt": "Expires"
   },
   "common": {
     "confirm": "Confirm",
@@ -83,7 +106,8 @@
     "manage": "Manage",
     "prev": "Previous",
     "next": "Next",
-    "error": "Operation failed"
+    "error": "Operation failed",
+    "copied": "Copied"
   },
   "customerConfig": {
     "title": "User Management",

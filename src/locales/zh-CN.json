@@ -68,7 +68,30 @@
     "rebuildFailed": "索引重建失败",
     "mergeOps": "合并操作",
     "mergeStarted": "合并已开始",
-    "refresh": "刷新"
+    "refresh": "刷新",
+    "apiTokenManagement": "API Token 管理",
+    "createToken": "创建 Token",
+    "tokenName": "名称",
+    "tokenNamePlaceholder": "请输入 Token 名称",
+    "tokenNameRequired": "请输入 Token 名称",
+    "permissions": "权限",
+    "permUpload": "上传",
+    "permDelete": "删除",
+    "permList": "列出",
+    "permManage": "管理",
+    "expiry": "有效期",
+    "neverExpire": "永不过期",
+    "validPeriod": "自定义",
+    "days": "天",
+    "autoDeleteOnExpire": "过期自动删除",
+    "createBtn": "创建",
+    "tokenCreated": "Token 创建成功",
+    "tokenCreatedCopy": "请立即复制此 Token，关闭后将无法再次查看：",
+    "tokenCreateFailed": "Token 创建失败",
+    "tokenDeleted": "Token 已删除",
+    "tokenDeleteFailed": "Token 删除失败",
+    "noTokens": "暂无 API Token",
+    "expiresAt": "过期时间"
   },
   "common": {
     "confirm": "确认",
@@ -83,7 +106,8 @@
     "manage": "管理",
     "prev": "上一页",
     "next": "下一页",
-    "error": "操作失败"
+    "error": "操作失败",
+    "copied": "已复制"
   },
   "customerConfig": {
     "title": "用户管理",
